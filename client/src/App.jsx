@@ -1,52 +1,84 @@
 import {
-    BrowserRouter as Router,
-    Routes,
-    Route
-} from "react-router-dom"
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	useLocation,
+} from "react-router-dom";
 
-import { AuthContext } from "./contexts/AuthContext"
+import { AuthContext } from "./contexts/AuthContext";
 
-import NotFound from "./pages/NotFound.jsx"
+import NotFound from "./pages/NotFound.jsx";
 
-import Home from "./pages/Home.jsx"
-import About from "./pages/About.jsx"
-import Contact from "./pages/Contact.jsx"
+import Home from "./pages/Home.jsx";
+import About from "./pages/About.jsx";
+import Contact from "./pages/Contact.jsx";
 
-import Login from "./pages/Login.jsx"
-import Register from "./pages/Register.jsx"
+import Login from "./pages/Login.jsx";
+import Register from "./pages/Register.jsx";
 
-import Profile from "./pages/Profile.jsx"
+import Profile from "./pages/Profile.jsx";
 
-import Reset from "./pages/Reset.jsx"
-import Forgot from "./pages/Forgot.jsx"
+import Reset from "./pages/Reset.jsx";
+import Forgot from "./pages/Forgot.jsx";
+
+import Logout from "./pages/Logout.jsx";
+import Delete from "./pages/Delete.jsx";
+
+import Nav from "./components/common/Nav.jsx";
+
+import "./style.css";
+import { useEffect, useState } from "react";
 
 function AppContent() {
+	const [auth, setAuth] = useState(false);
+	const [authLoading, setAuthLoading] = useState(true);
+	let location = useLocation();
 
-    return (
-        <AuthContext.Provider value={false}>
-            <Routes>
-                <Route path="*" element={<NotFound/>} />
+	useEffect(() => {
+		setAuthLoading(true);
+		fetch("/api/isauth", {
+			method: "POST",
+			headers: {
+				ContentType: "application/json",
+			},
+			credentials: "include",
+		})
+			.then((res) => res.json())
+			.then((json) => {
+				setAuth(json.authenticated);
+				setAuthLoading(false);
+				console.log(`Auth status: ${json.authenticated}`);
+			});
+	}, [location]);
 
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element = {<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/" element={<Profile />} />
-                <Route path="/" element={<Reset />} />
-                <Route path="/" element={<Forgot />} />
-                <Route path="/" element={<About />} />
-                <Route path="/" element={<Contact />} />
-            </Routes>
-        </AuthContext.Provider>
-    )
+	return (
+		<AuthContext.Provider
+			value={{ authenticated: auth, loading: authLoading }}
+		>
+			<Nav />
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/login" element={<Login />} />
+				<Route path="/register" element={<Register />} />
+				<Route path="/profile" element={<Profile />} />
+				<Route path="/reset" element={<Reset />} />
+				<Route path="/forgot" element={<Forgot />} />
+				<Route path="/about" element={<About />} />
+				<Route path="/contact" element={<Contact />} />
+				<Route path="/logout" element={<Logout />} />
+				<Route path="/delete" element={<Delete />} />
+				<Route path="*" element={<NotFound />} />
+			</Routes>
+		</AuthContext.Provider>
+	);
 }
-
 
 function App() {
-    return (
-        <Router>
-            <AppContent />
-        </Router>
-    )
+	return (
+		<Router>
+			<AppContent />
+		</Router>
+	);
 }
 
-export default App
+export default App;

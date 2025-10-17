@@ -1,3 +1,5 @@
+-- @ts-nocheck
+-- $ will be replaced with database name at runtime, ignore error
 CREATE DATABASE IF NOT EXISTS $ CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE $;
 
