@@ -39,7 +39,7 @@ Then in **both terminals**, run:
 npm start
 ```
 
--   Client will run on: http://localhost:3000
+-   Client will run on: http://localhost:3000 --> go to this link
 -   Server will run on: http://localhost:5000
 
 The database will automatically create itself on first run.

@@ -1,5 +1,5 @@
-function Component () {
-    return <></>
+function Component() {
+	return <h1>We have no contacts</h1>;
 }
 
-export default Component
+export default Component;
