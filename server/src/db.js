@@ -7,6 +7,8 @@ const crypto = require("crypto");
 const DATABASE_NAME = "restaurant_db";
 
 const dbSchema = "src/schemas/db.sql";
+const bookingsSchema = "src/schemas/bookings.sql";
+
 /** @type {import("mysql2/promise").Pool | undefined} */
 let pool;
 
@@ -36,16 +38,18 @@ async function runSQL(filePath, connection) {
 
 		const dbExisting = await dbExists(connection);
 		if (dbExisting) {
-			console.log(chalk.greenBright("Database created!"));
-			pool = mysql.createPool({
-				host: "localhost",
-				user: "root",
-				password: "",
-				database: DATABASE_NAME,
-				connectionLimit: 10,
-				waitForConnections: true,
-				queueLimit: 0,
-			});
+			if (!pool) {
+				pool = mysql.createPool({
+					host: "localhost",
+					user: "root",
+					password: "",
+					database: DATABASE_NAME,
+					connectionLimit: 10,
+					waitForConnections: true,
+					queueLimit: 0,
+				});
+				console.log(chalk.greenBright("Pool created!"));
+			}
 		}
 	} catch (err) {
 		console.log(chalk.red.bold("Failed to connect to sql database!", err));
@@ -57,6 +61,7 @@ async function testDB() {
 		host: "localhost",
 		user: "root",
 		password: "",
+		multipleStatements: true,
 	});
 
 	try {
@@ -65,19 +70,13 @@ async function testDB() {
 		if (dbExisting) {
 			console.log(
 				chalk.cyanBright(
-					`Database ${DATABASE_NAME} existing! Continuing...`
+					`Database ${DATABASE_NAME} existing! Continuing...\nWill run SQL to create any missing tables!`
 				)
 			);
 
-			pool = mysql.createPool({
-				host: "localhost",
-				user: "root",
-				password: "",
-				database: DATABASE_NAME,
-				connectionLimit: 10,
-				waitForConnections: true,
-				queueLimit: 0,
-			});
+			await runSQL(dbSchema, connection); // bleh, creates the pool too
+
+			connection.destroy();
 			return;
 		}
 
