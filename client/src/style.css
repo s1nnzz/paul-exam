@@ -2,27 +2,172 @@
 	box-sizing: border-box;
 }
 
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #1e1e1e;
+	color: #e0e0e0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+		Ubuntu, Cantarell, sans-serif;
+}
+
+main {
+	padding: 2em;
+	max-width: 800px;
+	margin: 0 auto;
+	min-height: calc(100vh - 60px);
+}
+
+h1 {
+	font-size: 2em;
+	margin-bottom: 0.5em;
+	color: #ffffff;
+}
+
+h2 {
+	font-size: 1.5em;
+	margin-top: 1.5em;
+	margin-bottom: 0.5em;
+	color: #e0e0e0;
+}
+
+/* Form Container Styling */
+form {
+	background-color: #252526;
+	padding: 2em;
+	border-radius: 8px;
+	border: 1px solid #3e3e42;
+	max-width: 500px;
+	margin: 2em auto;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+form > div {
+	margin-bottom: 1.5em;
+}
+
+label {
+	display: block;
+	margin-bottom: 0.5em;
+	font-weight: 500;
+	color: #cccccc;
+}
+
+input,
+textarea,
+select {
+	width: 100%;
+	background-color: #2d2d2d;
+	color: #e0e0e0;
+	border: 1px solid #404040;
+	padding: 0.75em;
+	border-radius: 4px;
+	font-size: 1em;
+	transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+	outline: none;
+	border-color: #569cd6;
+	box-shadow: 0 0 0 3px rgba(86, 156, 214, 0.2);
+}
+
+button {
+	width: 100%;
+	background-color: #0e639c;
+	color: white;
+	border: none;
+	padding: 0.75em 1.5em;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 1em;
+	font-weight: 500;
+	transition: background-color 0.2s;
+	margin-top: 0.5em;
+}
+
+button:hover {
+	background-color: #1177bb;
+}
+
+button:active {
+	transform: translateY(1px);
+}
+
+a {
+	color: #4fc3f7;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #81d4fa;
+	text-decoration: underline;
+}
+
+/* Page Content Styling */
+.content {
+	text-align: center;
+	padding: 2em 0;
+}
+
+/* Links Container (for pages with multiple links like Login) */
+form + a,
+a + a {
+	display: block;
+	margin: 1em auto;
+	text-align: center;
+	max-width: 500px;
+	padding: 0.5em;
+}
+
+/* Profile Page Styling */
+h1 + h2 {
+	margin-top: 1em;
+}
+
+h2 + a {
+	margin-top: 2em;
+}
+
+/* Card-like sections for better organization */
+.profile-info,
+.page-section {
+	background-color: #252526;
+	padding: 2em;
+	border-radius: 8px;
+	border: 1px solid #3e3e42;
+	margin: 2em 0;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
 nav {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
-	padding-right: 1em;
-	padding-left: 1em;
+	padding: 1em;
 	background-color: black;
 	color: white;
+}
+
+nav h1 {
+	margin: 0;
+	font-size: 1.5em;
 }
 
 #nav-right {
 	display: flex;
 	flex-direction: row;
 	gap: 1em;
+	align-items: center;
 }
 
 #nav-right a {
 	padding: 0.5em 1em;
 	background-color: white;
-	border-radius: 100vw;
+	border-radius: 6px;
 	color: black;
 	text-decoration: none;
 	transition: background-color, color 0.2s;
