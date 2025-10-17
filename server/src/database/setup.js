@@ -3,7 +3,7 @@ const chalk = require("chalk");
 const fs = require("fs");
 const { DATABASE_NAME, createPool } = require("./connection");
 
-const dbSchema = "src/schemas/db.sql";
+const dbSchema = "src/schemas/main.sql";
 
 async function dbExists(connection) {
 	const [databases] = await connection.query(
@@ -18,8 +18,9 @@ async function runSQL(filePath, connection) {
 
 		const statements = file
 			.split(";")
-			.map((stmt) => stmt.trim().replace("$", DATABASE_NAME))
-			.filter((stmt) => stmt.length > 0);
+			.map((stmt) => stmt.trim().replace("[db]", DATABASE_NAME))
+			.filter((stmt) => stmt.length > 0)
+			.filter((stmt) => stmt.substring(0, 2) !== "--"); // ignore comments
 
 		console.log(chalk.yellow.bold("Running SQL file..."));
 
