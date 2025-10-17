@@ -1,6 +1,9 @@
 import Form from "../components/common/Form";
+import { Link, useNavigate } from "react-router-dom";
 
 function Component() {
+	const navigate = useNavigate();
+
 	const formDetails = {
 		Email: {
 			Type: "email",
@@ -48,7 +51,15 @@ function Component() {
 				password,
 			}),
 		})
-			.then((res) => res.json())
+			.then((res) => {
+				console.log(res.status);
+				if (res.status === 200) {
+					console.log("yay");
+					navigate("/login", { replace: true });
+				}
+
+				return res.json();
+			})
 			.then((json) => {
 				console.log(json);
 			});
@@ -57,6 +68,7 @@ function Component() {
 	return (
 		<>
 			<Form FormDetails={formDetails} SubmitCallback={onSubmit}></Form>
+			<Link to="/login">Already registered? Click here to log in.</Link>
 		</>
 	);
 }
