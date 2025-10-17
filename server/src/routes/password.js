@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db");
+const { User } = require("../database");
 
 router.post("/forgot", async (req, res) => {
 	const { email } = req.body;
@@ -10,7 +10,7 @@ router.post("/forgot", async (req, res) => {
 		return;
 	}
 
-	const resetToken = await db.createPasswordReset(email);
+	const resetToken = await User.createPasswordReset(email);
 
 	if (!resetToken) {
 		res.status(404).json({ message: "User not found" });
@@ -31,7 +31,7 @@ router.post("/reset", async (req, res) => {
 		return;
 	}
 
-	const success = await db.completePasswordReset(token, password);
+	const success = await User.completePasswordReset(token, password);
 
 	if (!success) {
 		res.status(400).json({ message: "Invalid or expired reset token" });

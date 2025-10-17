@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db");
+const { User } = require("../database");
 
 router.post("/login", async (req, res) => {
 	const { email, password } = req.body;
-	if (await db.getUserId(email)) {
-		const continueLogin = await db.canLoginUser(email, password);
+	if (await User.getUserId(email)) {
+		const continueLogin = await User.canLoginUser(email, password);
 		if (!continueLogin) {
 			res.status(401).json({
 				message: "User doesn't exist or password is incorrect.",
@@ -14,7 +14,7 @@ router.post("/login", async (req, res) => {
 			return;
 		}
 
-		req.session.userId = await db.getUserId(email);
+		req.session.userId = await User.getUserId(email);
 		res.status(200).json({
 			message: "Successfully authenticated.",
 		});
@@ -30,15 +30,15 @@ router.post("/register", async (req, res) => {
 	// what we send here should be verified by the client
 	// to be the same as the confirms
 	console.log(email);
-	console.log(await db.getUserId(email));
-	if (await db.getUserId(email)) {
+	console.log(await User.getUserId(email));
+	if (await User.getUserId(email)) {
 		res.status(409).json({
 			message: "An account with this email already exists.",
 		});
 		return; // early exit
 	}
 
-	db.registerUser(email, password);
+	User.registerUser(email, password);
 	res.status(200).json({ message: "Successfully registered" });
 });
 
@@ -59,7 +59,7 @@ router.post("/userdata", async (req, res) => {
 		return;
 	}
 
-	const userData = await db.getData(req.session.userId);
+	const userData = await User.getUserData(req.session.userId);
 
 	const returnData = {
 		id: userData.id,
@@ -78,7 +78,7 @@ router.post("/delete", async (req, res) => {
 		return;
 	}
 
-	await db.deleteAccount(req.session.userId);
+	await User.deleteAccount(req.session.userId);
 
 	req.session.destroy((err) => {
 		if (err) {
