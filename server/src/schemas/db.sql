@@ -8,3 +8,11 @@ CREATE TABLE IF NOT EXISTS users (
     reset_token CHAR(64) DEFAULT NULL,
     reset_expires DATETIME DEFAULT NULL
 );
+
+CREATE TABLE IF NOT EXISTS bookings (
+    booking_id INT AUTO_INCREMENT PRIMARY KEY,
+    people_count INT NOT NULL,
+    special_instructions TEXT,
+    id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (id) REFERENCES users(id)
+)
