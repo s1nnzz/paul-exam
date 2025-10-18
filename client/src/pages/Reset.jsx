@@ -1,11 +1,13 @@
 import { useContext, useEffect } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { FlashContext } from "../contexts/FlashContext";
 import Form from "../components/common/Form";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 function Reset() {
 	const authenticated = useContext(AuthContext);
+	const { setFlash } = useContext(FlashContext);
 	const navigate = useNavigate();
 
 	const [searchParams] = useSearchParams();
@@ -29,12 +31,12 @@ function Reset() {
 		const confirmPassword = e.target.ConfirmPassword.value;
 
 		if (password !== confirmPassword) {
-			alert("Passwords do not match");
+			setFlash("Passwords do not match");
 			return;
 		}
 
 		if (!token) {
-			alert("Invalid reset token");
+			setFlash("Invalid reset token");
 			return;
 		}
 
@@ -51,15 +53,18 @@ function Reset() {
 		})
 			.then((res) => {
 				if (res.status === 200) {
-					alert("Password reset successful!");
+					setFlash("Password reset successful!");
 					navigate("/login");
 				} else if (res.status === 400) {
-					alert("Invalid or expired reset token");
+					setFlash("Invalid or expired reset token");
 				}
 				return res.json();
 			})
 			.then((json) => {
 				console.log(json);
+				if (json.message) {
+					setFlash(json.message);
+				}
 			});
 	};
 

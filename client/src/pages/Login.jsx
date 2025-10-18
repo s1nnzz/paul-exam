@@ -3,10 +3,13 @@ import Form from "../components/common/Form";
 import { Link } from "react-router-dom";
 import { Navigate, useNavigate } from "react-router-dom";
 import { AuthContext } from "../contexts/AuthContext";
+import { FlashContext } from "../contexts/FlashContext";
 
 function Login() {
 	const authenticated = useContext(AuthContext);
 	const nav = useNavigate();
+
+	const { setFlash } = useContext(FlashContext);
 
 	const formDetails = {
 		Email: {
@@ -44,7 +47,7 @@ function Login() {
 				return res.json();
 			})
 			.then((json) => {
-				console.log(json);
+				setFlash(json.message);
 			});
 	};
 

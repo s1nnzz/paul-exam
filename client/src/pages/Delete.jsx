@@ -1,10 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { FlashContext } from "../contexts/FlashContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 function Delete() {
 	const authenticated = useContext(AuthContext);
+	const { setFlash } = useContext(FlashContext);
 	const nav = useNavigate();
 
 	if (!authenticated) {
@@ -29,13 +31,19 @@ function Delete() {
 		})
 			.then((res) => {
 				if (res.status === 200) {
-					alert("Account deleted successfully");
+					setFlash("Account deleted successfully");
 					nav("/", { replace: true });
 				}
 				return res.json();
 			})
 			.then((json) => {
 				console.log(json);
+				if (
+					json.message &&
+					json.message !== "Account deleted successfully"
+				) {
+					setFlash(json.message);
+				}
 			});
 	};
 

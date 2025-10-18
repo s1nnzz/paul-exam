@@ -1,8 +1,11 @@
 import Form from "../components/common/Form";
 import { Link, useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { FlashContext } from "../contexts/FlashContext";
 
 function Component() {
 	const navigate = useNavigate();
+	const { setFlash } = useContext(FlashContext);
 
 	const formDetails = {
 		Email: {
@@ -31,12 +34,12 @@ function Component() {
 		const confirmpassword = e.target.ConfirmPassword.value;
 
 		if (email != confirmemail) {
-			console.log("Email not the same as confirm email");
+			setFlash("Email not the same as confirm email");
 			return;
 		}
 
 		if (password != confirmpassword) {
-			console.log("Password not the same as confirm password");
+			setFlash("Password not the same as confirm password");
 			return;
 		}
 
@@ -54,7 +57,7 @@ function Component() {
 			.then((res) => {
 				console.log(res.status);
 				if (res.status === 200) {
-					console.log("yay");
+					setFlash("Registration successful! Please log in.");
 					navigate("/login", { replace: true });
 				}
 
@@ -62,6 +65,9 @@ function Component() {
 			})
 			.then((json) => {
 				console.log(json);
+				if (json.message) {
+					setFlash(json.message);
+				}
 			});
 	};
 

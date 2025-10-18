@@ -6,6 +6,7 @@ import {
 } from "react-router-dom";
 
 import { AuthContext } from "./contexts/AuthContext";
+import { FlashProvider } from "./contexts/FlashContext.jsx";
 
 import NotFound from "./pages/NotFound.jsx";
 
@@ -25,6 +26,7 @@ import Logout from "./pages/Logout.jsx";
 import Delete from "./pages/Delete.jsx";
 
 import Nav from "./components/common/Nav.jsx";
+import Flash from "./components/common/Flash.jsx";
 
 import "./style.css";
 import { useEffect, useState } from "react";
@@ -56,6 +58,7 @@ function AppContent() {
 			value={{ authenticated: auth, loading: authLoading }}
 		>
 			<Nav />
+			<Flash />
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/login" element={<Login />} />
@@ -76,7 +79,9 @@ function AppContent() {
 function App() {
 	return (
 		<Router>
-			<AppContent />
+			<FlashProvider>
+				<AppContent />
+			</FlashProvider>
 		</Router>
 	);
 }

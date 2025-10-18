@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
+import { FlashContext } from "../contexts/FlashContext";
 import Form from "../components/common/Form";
 import { useState } from "react";
 
 function Forgot() {
 	const authenticated = useContext(AuthContext);
+	const { setFlash } = useContext(FlashContext);
 	const [resetToken, setResetToken] = useState(null);
 	const [email, setEmail] = useState("");
 
@@ -34,7 +36,7 @@ function Forgot() {
 		})
 			.then((res) => {
 				if (res.status === 200) {
-					console.log("Password reset email sent");
+					setFlash("Password reset email sent");
 				}
 				return res.json();
 			})
@@ -42,6 +44,9 @@ function Forgot() {
 				console.log(json);
 				if (json.resetToken) {
 					setResetToken(json.resetToken);
+				}
+				if (json.message) {
+					setFlash(json.message);
 				}
 			});
 	};
