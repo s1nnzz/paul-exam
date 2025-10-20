@@ -2,7 +2,10 @@ function Form({ FormDetails, SubmitCallback }) {
 	function DoNothing() {}
 
 	return (
-		<form onSubmit={SubmitCallback ? SubmitCallback : DoNothing}>
+		<form
+			onSubmit={SubmitCallback ? SubmitCallback : DoNothing}
+			autoComplete="off"
+		>
 			{Object.entries(FormDetails).map(([key, val]) => {
 				if (key != "$submit") {
 					return (
