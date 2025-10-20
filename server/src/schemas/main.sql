@@ -11,8 +11,9 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS bookings (
     booking_id INT AUTO_INCREMENT PRIMARY KEY,
-    people_count INT NOT NULL,
+    people_count INT UNSIGNED NOT NULL,
     special_instructions TEXT,
+    table_number INT UNSIGNED NOT NULL,
     id INT UNSIGNED NOT NULL,
     FOREIGN KEY (id) REFERENCES users(id)
 );
