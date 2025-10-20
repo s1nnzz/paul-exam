@@ -1,4 +1,6 @@
 import { useContext } from "react";
+import { useMutation } from "../apollo/hooks.js";
+import { DELETE_ACCOUNT } from "../apollo/mutations.js";
 import { AuthContext } from "../contexts/AuthContext";
 import { FlashContext } from "../contexts/FlashContext";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -9,11 +11,14 @@ function Delete() {
 	const { setFlash } = useContext(FlashContext);
 	const nav = useNavigate();
 
+	// GraphQL mutation
+	const [deleteAccount] = useMutation(DELETE_ACCOUNT);
+
 	if (!authenticated) {
 		return <Navigate to="/" replace={true} />;
 	}
 
-	const handleDelete = () => {
+	const handleDelete = async () => {
 		if (
 			!confirm(
 				"Are you sure you want to delete your account? This cannot be undone."
@@ -22,29 +27,16 @@ function Delete() {
 			return;
 		}
 
-		fetch("/api/delete", {
-			method: "POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		})
-			.then((res) => {
-				if (res.status === 200) {
-					setFlash("Account deleted successfully");
-					nav("/", { replace: true });
-				}
-				return res.json();
-			})
-			.then((json) => {
-				console.log(json);
-				if (
-					json.message &&
-					json.message !== "Account deleted successfully"
-				) {
-					setFlash(json.message);
-				}
-			});
+		try {
+			const { data } = await deleteAccount();
+
+			if (data.deleteAccount.success) {
+				setFlash("Account deleted successfully");
+				nav("/", { replace: true });
+			}
+		} catch (err) {
+			setFlash(err.message);
+		}
 	};
 
 	return (

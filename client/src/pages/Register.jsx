@@ -1,3 +1,5 @@
+import { useMutation } from "../apollo/hooks.js";
+import { REGISTER } from "../apollo/mutations.js";
 import Form from "../components/common/Form";
 import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
@@ -6,6 +8,9 @@ import { FlashContext } from "../contexts/FlashContext";
 function Component() {
 	const navigate = useNavigate();
 	const { setFlash } = useContext(FlashContext);
+
+	// GraphQL mutation
+	const [register, { loading, error }] = useMutation(REGISTER);
 
 	const formDetails = {
 		Email: {
@@ -26,7 +31,7 @@ function Component() {
 		},
 	};
 
-	const onSubmit = (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
 		const email = e.target.Email.value;
 		const confirmemail = e.target.ConfirmEmail.value;
@@ -43,32 +48,18 @@ function Component() {
 			return;
 		}
 
-		const res = fetch("/api/register", {
-			method: "POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				email,
-				password,
-			}),
-		})
-			.then((res) => {
-				console.log(res.status);
-				if (res.status === 200) {
-					setFlash("Registration successful! Please log in.");
-					navigate("/login", { replace: true });
-				}
-
-				return res.json();
-			})
-			.then((json) => {
-				console.log(json);
-				if (json.message) {
-					setFlash(json.message);
-				}
+		try {
+			const { data } = await register({
+				variables: { email, password },
 			});
+
+			if (data.register.success) {
+				setFlash("Registration successful! Please log in.");
+				navigate("/login", { replace: true });
+			}
+		} catch (err) {
+			setFlash(err.message);
+		}
 	};
 
 	return (

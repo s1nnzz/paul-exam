@@ -1,4 +1,6 @@
 import { useContext, useEffect } from "react";
+import { useMutation } from "../apollo/hooks.js";
+import { RESET_PASSWORD } from "../apollo/mutations.js";
 import { AuthContext } from "../contexts/AuthContext";
 import { FlashContext } from "../contexts/FlashContext";
 import Form from "../components/common/Form";
@@ -14,6 +16,9 @@ function Reset() {
 	const email = searchParams.get("email");
 	const token = searchParams.get("token");
 
+	// GraphQL mutation
+	const [resetPassword, { loading, error }] = useMutation(RESET_PASSWORD);
+
 	const formDetails = {
 		Password: {
 			Type: "password",
@@ -25,7 +30,7 @@ function Reset() {
 		},
 	};
 
-	const onSubmit = (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
 		const password = e.target.Password.value;
 		const confirmPassword = e.target.ConfirmPassword.value;
@@ -40,32 +45,18 @@ function Reset() {
 			return;
 		}
 
-		fetch("/api/reset", {
-			method: "POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				token,
-				password,
-			}),
-		})
-			.then((res) => {
-				if (res.status === 200) {
-					setFlash("Password reset successful!");
-					navigate("/login");
-				} else if (res.status === 400) {
-					setFlash("Invalid or expired reset token");
-				}
-				return res.json();
-			})
-			.then((json) => {
-				console.log(json);
-				if (json.message) {
-					setFlash(json.message);
-				}
+		try {
+			const { data } = await resetPassword({
+				variables: { token, password },
 			});
+
+			if (data.resetPassword.success) {
+				setFlash("Password reset successful!");
+				navigate("/login");
+			}
+		} catch (err) {
+			setFlash(err.message);
+		}
 	};
 
 	return (

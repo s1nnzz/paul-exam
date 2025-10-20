@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
+import { useMutation } from "../apollo/hooks.js";
+import { FORGOT_PASSWORD } from "../apollo/mutations.js";
 import { AuthContext } from "../contexts/AuthContext";
 import { FlashContext } from "../contexts/FlashContext";
 import Form from "../components/common/Form";
@@ -11,6 +13,9 @@ function Forgot() {
 	const [resetToken, setResetToken] = useState(null);
 	const [email, setEmail] = useState("");
 
+	// GraphQL mutation
+	const [forgotPassword, { loading, error }] = useMutation(FORGOT_PASSWORD);
+
 	const formDetails = {
 		Email: {
 			Type: "email",
@@ -18,37 +23,24 @@ function Forgot() {
 		},
 	};
 
-	const onSubmit = (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
 		const email = e.target.Email.value;
 
 		setEmail(email);
 
-		fetch("/api/forgot", {
-			method: "POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				email,
-			}),
-		})
-			.then((res) => {
-				if (res.status === 200) {
-					setFlash("Password reset email sent");
-				}
-				return res.json();
-			})
-			.then((json) => {
-				console.log(json);
-				if (json.resetToken) {
-					setResetToken(json.resetToken);
-				}
-				if (json.message) {
-					setFlash(json.message);
-				}
+		try {
+			const { data } = await forgotPassword({
+				variables: { email },
 			});
+
+			if (data.forgotPassword.success) {
+				setFlash("Password reset email sent");
+				setResetToken(data.forgotPassword.resetToken);
+			}
+		} catch (err) {
+			setFlash(err.message);
+		}
 	};
 
 	return (

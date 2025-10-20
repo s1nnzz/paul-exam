@@ -4,6 +4,9 @@ import {
 	Route,
 	useLocation,
 } from "react-router-dom";
+import { ApolloProvider, useQuery } from "./apollo/hooks.js";
+import client from "./apollo/client.js";
+import { IS_AUTH } from "./apollo/queries.js";
 
 import { AuthContext } from "./contexts/AuthContext";
 import { FlashProvider } from "./contexts/FlashContext.jsx";
@@ -36,22 +39,20 @@ function AppContent() {
 	const [authLoading, setAuthLoading] = useState(true);
 	let location = useLocation();
 
+	// Use GraphQL query to check authentication
+	const { data, loading, refetch } = useQuery(IS_AUTH);
+
 	useEffect(() => {
-		setAuthLoading(true);
-		fetch("/api/isauth", {
-			method: "POST",
-			headers: {
-				ContentType: "application/json",
-			},
-			credentials: "include",
-		})
-			.then((res) => res.json())
-			.then((json) => {
-				setAuth(json.authenticated);
-				setAuthLoading(false);
-				console.log(`Auth status: ${json.authenticated}`);
-			});
-	}, [location]);
+		refetch(); // Refetch auth status on route change
+	}, [location, refetch]);
+
+	useEffect(() => {
+		if (!loading && data) {
+			setAuth(data.isAuth.success);
+			setAuthLoading(false);
+			console.log(`Auth status: ${data.isAuth.success}`);
+		}
+	}, [data, loading]);
 
 	return (
 		<AuthContext.Provider
@@ -78,11 +79,13 @@ function AppContent() {
 
 function App() {
 	return (
-		<Router>
-			<FlashProvider>
-				<AppContent />
-			</FlashProvider>
-		</Router>
+		<ApolloProvider client={client}>
+			<Router>
+				<FlashProvider>
+					<AppContent />
+				</FlashProvider>
+			</Router>
+		</ApolloProvider>
 	);
 }
 

@@ -1,4 +1,6 @@
 import { useContext, useEffect } from "react";
+import { useMutation } from "../apollo/hooks.js";
+import { LOGIN } from "../apollo/mutations.js";
 import Form from "../components/common/Form";
 import { Link } from "react-router-dom";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -8,8 +10,10 @@ import { FlashContext } from "../contexts/FlashContext";
 function Login() {
 	const authenticated = useContext(AuthContext);
 	const nav = useNavigate();
-
 	const { setFlash } = useContext(FlashContext);
+
+	// GraphQL mutation
+	const [login, { loading, error }] = useMutation(LOGIN);
 
 	const formDetails = {
 		Email: {
@@ -22,33 +26,25 @@ function Login() {
 		},
 	};
 
-	const onSubmit = (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
 		const email = e.target.Email.value;
 		const password = e.target.Password.value;
 
 		console.log(email, password);
 
-		const res = fetch("/api/login", {
-			method: "POST",
-			credentials: "include",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				email,
-				password,
-			}),
-		})
-			.then((res) => {
-				if (res.status === 200) {
-					nav("/", { replace: true });
-				}
-				return res.json();
-			})
-			.then((json) => {
-				setFlash(json.message);
+		try {
+			const { data } = await login({
+				variables: { email, password },
 			});
+
+			if (data.login.success) {
+				setFlash(data.login.message);
+				nav("/", { replace: true });
+			}
+		} catch (err) {
+			setFlash(err.message);
+		}
 	};
 
 	return (
