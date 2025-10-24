@@ -25,6 +25,8 @@ import Forgot from "./pages/Forgot.jsx";
 import Logout from "./pages/Logout.jsx";
 import Delete from "./pages/Delete.jsx";
 
+import Bookings from "./pages/Bookings.jsx";
+
 import Nav from "./components/common/Nav.jsx";
 import Flash from "./components/common/Flash.jsx";
 
@@ -70,6 +72,7 @@ function AppContent() {
 				<Route path="/contact" element={<Contact />} />
 				<Route path="/logout" element={<Logout />} />
 				<Route path="/delete" element={<Delete />} />
+				<Route path="/bookings" element={<Bookings />} />
 				<Route path="*" element={<NotFound />} />
 			</Routes>
 		</AuthContext.Provider>

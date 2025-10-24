@@ -202,3 +202,108 @@ nav h1 {
 .flash-text {
 	color: #3ea0e2;
 }
+
+/* Booking Styles */
+.container {
+	padding: 2em;
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.bookings-list {
+	display: grid;
+	gap: 1.5em;
+	margin-top: 2em;
+}
+
+.booking-card {
+	background-color: #252526;
+	padding: 1.5em;
+	border-radius: 8px;
+	border: 1px solid #3e3e42;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1em;
+}
+
+.booking-info h3 {
+	margin: 0 0 1em 0;
+	color: #569cd6;
+}
+
+.booking-info p {
+	margin: 0.5em 0;
+	color: #cccccc;
+}
+
+.btn-primary {
+	background-color: #0e639c;
+	color: white;
+	border: none;
+	padding: 0.75em 1.5em;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 1em;
+	font-weight: 500;
+	transition: background-color 0.2s;
+	width: auto;
+	display: inline-block;
+	margin-bottom: 1.5em;
+}
+
+.btn-primary:hover {
+	background-color: #1177bb;
+}
+
+.btn-secondary {
+	background-color: #6c757d;
+	color: white;
+	border: none;
+	padding: 0.75em 1.5em;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 1em;
+	font-weight: 500;
+	transition: background-color 0.2s;
+	width: auto;
+	display: inline-block;
+	margin-left: 0.5em;
+}
+
+.btn-secondary:hover {
+	background-color: #5a6268;
+}
+
+.btn-danger {
+	background-color: #d32f2f;
+	color: white;
+	border: none;
+	padding: 0.75em 1.5em;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 1em;
+	font-weight: 500;
+	transition: background-color 0.2s;
+	width: auto;
+}
+
+.btn-danger:hover {
+	background-color: #b71c1c;
+}
+
+textarea {
+	resize: vertical;
+	min-height: 100px;
+	font-family: inherit;
+}
+
+button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+button:disabled:hover {
+	background-color: #0e639c;
+}

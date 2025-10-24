@@ -10,10 +10,11 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS bookings (
-    booking_id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id VARCHAR(8) PRIMARY KEY,
     people_count INT UNSIGNED NOT NULL,
     special_instructions TEXT,
     table_number INT UNSIGNED NOT NULL,
+    booking_dt DATETIME NOT NULL,
     id INT UNSIGNED NOT NULL,
     FOREIGN KEY (id) REFERENCES users(id)
 );
