@@ -41,14 +41,14 @@ async function runSQL(filePath, connection) {
 }
 
 async function initializeDatabase() {
-	const connection = await mysql.createConnection({
-		host: "localhost",
-		user: "root",
-		password: "",
-		multipleStatements: true,
-	});
-
 	try {
+		const connection = await mysql.createConnection({
+			host: "localhost",
+			user: "root",
+			password: "",
+			multipleStatements: true,
+		});
+
 		const dbExisting = await dbExists(connection);
 
 		if (dbExisting) {
@@ -66,9 +66,9 @@ async function initializeDatabase() {
 		await runSQL(dbSchema, connection);
 		connection.destroy();
 	} catch (err) {
-		console.log(chalk.red.bold("Failed to connect to sql database!"));
-		console.error(err);
-		throw err;
+		console.log(
+			chalk.red.bold(`Failed to connect to sql database! ${err}`)
+		);
 	}
 }
 
