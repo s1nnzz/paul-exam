@@ -84,11 +84,11 @@ function Bookings() {
 	};
 
 	if (loading || loadingBookings) {
-		return <div className="container">Loading...</div>;
+		return <main>Loading...</main>;
 	}
 
 	return (
-		<div className="container">
+		<main>
 			{view === "list" ? (
 				<BookingList
 					bookings={bookings}
@@ -104,7 +104,7 @@ function Bookings() {
 					/>
 				</div>
 			)}
-		</div>
+		</main>
 	);
 }
 

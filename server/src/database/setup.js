@@ -65,6 +65,7 @@ async function initializeDatabase() {
 
 		await runSQL(dbSchema, connection);
 		connection.destroy();
+		createPool();
 	} catch (err) {
 		console.log(
 			chalk.red.bold(`Failed to connect to sql database! ${err}`)
